@@ -1,33 +1,72 @@
-// DOCUMENTAÇÃO:
-// SUPABASE_URL: Usamos apenas o domínio base do projeto.
-// SUPABASE_KEY: Usamos a sua 'anon public' key que você enviou.
-
-const SUPABASE_URL = 'https://tcjjdznykunlyqczgcif.supabase.co'; 
+// Configurações do seu projeto
+const SUPABASE_URL = 'https://tcjjdznykunlyqczgcif.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ZvsQqNXKlOAl9aYDMbNQSA_tSEOpTCL';
 
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Função para postar (Verifique se os nomes das colunas batem com o banco)
+// Carregar mensagens
+async function carregarMensagens() {
+    const { data, error } = await _supabase
+        .from('comentarios')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error("Erro ao carregar:", error);
+        return;
+    }
+    renderizar(data);
+}
+
+// Mostrar na tela
+function renderizar(mensagens) {
+    const container = document.getElementById('lista-comentarios');
+    container.innerHTML = '';
+
+    mensagens.forEach(m => {
+        const data = new Date(m.created_at).toLocaleString('pt-BR');
+        const div = document.createElement('div');
+        div.className = 'comentario-card';
+        div.innerHTML = `
+            <div class="meta-info">${data}</div>
+            <strong>@${m.usuario}</strong>
+            <p>${m.mensagem}</p>
+            <button onclick="curtir(${m.id}, ${m.likes})" style="width:auto; padding:5px 10px; border-color:red; color:red">
+                ❤ Determinação (${m.likes})
+            </button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Postar (Atenção ao nome das colunas!)
 async function postarNoSupabase() {
     const user = document.getElementById('nome-usuario').value;
     const msg = document.getElementById('texto-comentario').value;
 
-    if (!user || !msg) return alert("Preencha os campos!");
+    if(!user || !msg) return alert("Preencha os campos!");
 
-    // IMPORTANTE: 'usuario' e 'mensagem' devem ser os nomes exatos das colunas no Supabase
+    // IMPORTANTE: No Supabase, a coluna deve se chamar exatamente 'mensagem'
     const { error } = await _supabase
         .from('comentarios')
-        .insert([{ 
-            usuario: user, 
-            mensagem: msg, 
-            likes: 0 
-        }]);
+        .insert([{ usuario: user, mensagem: msg, likes: 0 }]);
 
-    if (error) {
-        alert("Erro ao enviar: " + error.message);
-        console.log(error);
+    if(error) {
+        alert("Erro ao postar: " + error.message);
     } else {
         document.getElementById('texto-comentario').value = '';
         carregarMensagens();
     }
 }
+
+// Sistema de Likes
+async function curtir(id, likesAtuais) {
+    const { error } = await _supabase
+        .from('comentarios')
+        .update({ likes: likesAtuais + 1 })
+        .eq('id', id);
+
+    if(!error) carregarMensagens();
+}
+
+carregarMensagens();
