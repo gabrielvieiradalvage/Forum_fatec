@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undertale Wiki-Forum</title>
+    <style>
+        /* CSS - Define a aparência do site */
+        body {
+            font-family: 'Courier New', Courier, monospace; /* Fonte estilo terminal */
+            background-color: #000; /* Fundo preto como no jogo */
+            color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: #111;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #ffff00; /* Linha amarela Undertale */
+        }
+
+        .container {
+            display: flex;
+            max-width: 1000px;
+            width: 90%;
+            margin-top: 20px;
+            gap: 20px;
+        }
+
+        /* Sidebar estilo Wikipedia */
+        aside {
+            flex: 1;
+            background-color: #222;
+            padding: 15px;
+            border: 2px solid #fff;
+            height: fit-content;
+        }
+
+        aside img {
+            width: 100%;
+            image-rendering: pixelated; /* Mantém o estilo pixel art */
+        }
+
+        /* Conteúdo Principal */
+        main {
+            flex: 3;
+            background-color: #111;
+            padding: 20px;
+            border: 2px solid #fff;
+        }
+
+        h2 {
+            color: #ffff00;
+        }
+
+        .soul-icon {
+            color: red;
+            font-size: 20px;
+        }
+
+        /* Seção de Fórum */
+        .forum-section {
+            margin-top: 30px;
+            border-top: 2px dashed #555;
+            padding-top: 20px;
+        }
+
+        #comment-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .comment {
+            background: #333;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-left: 5px solid red;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            background: #000;
+            color: #fff;
+            border: 1px solid #fff;
+        }
+
+        button:hover {
+            background: #ffff00;
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>UNDERTALE: Wiki & Fórum</h1>
+        <p>Determinante para todos os fãs.</p>
+    </header>
+
+    <div class="container">
+        <!-- Barra Lateral Informativa -->
+        <aside>
+            <h3>Ficha Técnica</h3>
+            <p><strong>Desenvolvedor:</strong> Toby Fox</p>
+            <p><strong>Lançamento:</strong> 2015</p>
+            <p><strong>Gênero:</strong> RPG</p>
+            <hr>
+            <p><i>"Apesar de tudo, ainda és tu."</i></p>
+        </aside>
+
+        <!-- Conteúdo do Artigo -->
+        <main>
+            <section id="sobre">
+                <h2>O que é Undertale?</h2>
+                <p>Undertale é um jogo de RPG onde ninguém precisa de morrer. Tu controlas uma criança que caiu no Subsolo, um mundo cheio de monstros. Para voltares para casa, deves decidir se vais lutar ou mostrar misericórdia.</p>
+            </section>
+
+            <section id="interacao">
+                <h2>Interação e a Alma <span class="soul-icon">❤</span></h2>
+                <p>A principal forma de interação é através do sistema de combate. O jogador pode interagir com os monstros de várias formas:</p>
+                <ul>
+                    <li><strong>ACT (Agir):</strong> Conversar, elogiar ou até contar piadas para os monstros.</li>
+                    <li><strong>MERCY (Piedade):</strong> Poupar o inimigo após ganhar a sua confiança.</li>
+                    <li><strong>FIGHT (Lutar):</strong> O caminho clássico, mas que traz consequências permanentes.</li>
+                </ul>
+            </section>
+
+            <!-- Área do Fórum -->
+            <section class="forum-section">
+                <h2>Fórum da Comunidade</h2>
+                <div id="comment-form">
+                    <input type="text" id="username" placeholder="Teu nome de utilizador...">
+                    <textarea id="comment-text" placeholder="O que achas da mecânica de moralidade do jogo?"></textarea>
+                    <button onclick="adicionarComentario()">Publicar no Fórum</button>
+                </div>
+
+                <div id="comment-list">
+                    <!-- Os comentários aparecerão aqui -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // JavaScript - Adiciona funcionalidade ao fórum
+        function adicionarComentario() {
+            const nome = document.getElementById('username').value;
+            const texto = document.getElementById('comment-text').value;
+
+            if (nome === "" || texto === "") {
+                alert("Por favor, preenche todos os campos!");
+                return;
+            }
+
+            // Criar o elemento do comentário
+            const lista = document.getElementById('comment-list');
+            const novoComentario = document.createElement('div');
+            novoComentario.classList.add('comment');
+            
+            // Inserir o conteúdo no comentário
+            novoComentario.innerHTML = `<strong>${nome}:</strong> <p>${texto}</p>`;
+
+            // Adicionar à lista e limpar os campos
+            lista.prepend(novoComentario);
+            document.getElementById('username').value = "";
+            document.getElementById('comment-text').value = "";
+        }
+    </script>
+
+</body>
+</html>
