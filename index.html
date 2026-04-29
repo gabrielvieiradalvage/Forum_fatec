@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Undertale Wiki - Fórum FATEC</title>
+    <!-- Carregando a biblioteca do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* CSS - Estilização Visual */
+        /* CSS - Estilização Visual Estilo Undertale */
         body {
             font-family: 'Courier New', Courier, monospace;
-            background-color: #000; /* Preto clássico de Undertale */
+            background-color: #000;
             color: #fff;
             margin: 0;
             display: flex;
@@ -21,7 +23,7 @@
             width: 100%;
             padding: 30px;
             text-align: center;
-            border-bottom: 4px solid #ffff00; /* Amarelo da Determinação */
+            border-bottom: 4px solid #ffff00;
         }
 
         .container {
@@ -32,7 +34,7 @@
             gap: 25px;
         }
 
-        /* Sidebar estilo Wikipedia */
+        /* Sidebar Wiki */
         aside {
             flex: 1;
             background-color: #1a1a1a;
@@ -41,11 +43,7 @@
             height: fit-content;
         }
 
-        aside h3 {
-            border-bottom: 1px solid #555;
-            padding-bottom: 10px;
-            text-align: center;
-        }
+        aside h3 { border-bottom: 1px solid #555; padding-bottom: 10px; text-align: center; color: #ffff00; }
 
         /* Conteúdo Principal */
         main {
@@ -53,159 +51,208 @@
             background-color: #050505;
             padding: 25px;
             border: 2px solid #fff;
-            line-height: 1.6;
         }
 
-        h2 {
-            color: #ffff00;
-            border-bottom: 1px solid #333;
+        h2 { color: #ffff00; border-bottom: 1px solid #333; margin-top: 30px; }
+
+        .alma-coracao { color: #ff0000; font-size: 22px; }
+
+        /* Estilo das Seções de Info */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .info-card {
+            background: #222;
+            padding: 10px;
+            border: 1px solid #444;
         }
 
-        .alma-coracao {
-            color: #ff0000;
-            font-size: 22px;
-        }
-
-        /* Seção do Fórum */
+        /* Fórum */
         .forum-area {
-            margin-top: 40px;
+            margin-top: 50px;
             background-color: #111;
             padding: 20px;
             border: 1px dashed #ffff00;
         }
 
-        .input-grupo {
-            margin-bottom: 15px;
-        }
+        .input-grupo { margin-bottom: 15px; }
 
         input, textarea {
-            width: 100%;
-            padding: 12px;
-            background-color: #000;
-            border: 1px solid #fff;
-            color: #fff;
-            box-sizing: border-box; /* Garante que o padding não quebre a largura */
-            font-family: inherit;
+            width: 100%; padding: 12px; background-color: #000;
+            border: 1px solid #fff; color: #fff; box-sizing: border-box;
         }
 
         button {
-            width: 100%;
-            padding: 15px;
-            background-color: #000;
-            color: #ffff00;
-            border: 2px solid #ffff00;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: 0.3s;
+            width: 100%; padding: 15px; background-color: #000;
+            color: #ffff00; border: 2px solid #ffff00; cursor: pointer;
+            font-weight: bold; transition: 0.3s;
         }
 
-        button:hover {
-            background-color: #ffff00;
-            color: #000;
-        }
+        button:hover { background-color: #ffff00; color: #000; }
 
-        #lista-comentarios {
-            margin-top: 20px;
-        }
-
+        /* Comentários */
         .comentario-card {
-            background-color: #222;
+            background-color: #1a1a1a;
             padding: 15px;
-            margin-bottom: 15px;
-            border-left: 5px solid #ff0000; /* Borda vermelha da Alma */
-            animation: surgir 0.5s ease-out;
+            margin-top: 15px;
+            border-left: 5px solid #ff0000;
+            position: relative;
         }
 
-        @keyframes surgir {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .meta-info { font-size: 11px; color: #888; margin-bottom: 5px; }
+        
+        .btn-like {
+            width: auto; padding: 5px 10px; font-size: 12px;
+            margin-top: 5px; border-color: #ff0000; color: #ff0000;
         }
+        .btn-like:hover { background-color: #ff0000; color: #fff; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>UNDERTALE WIKI <span class="alma-coracao">❤</span> FÓRUM</h1>
-        <p>Um projeto para a FATEC sobre o RPG onde ninguém precisa morrer.</p>
+        <p>Projeto FATEC: Explorando as mecânicas de um clássico indie.</p>
     </header>
 
     <div class="container">
-        <!-- Barra Lateral -->
         <aside>
             <h3>Ficha Técnica</h3>
-            <p><strong>Criador:</strong> Toby Fox</p>
-            <p><strong>Ano:</strong> 2015</p>
-            <p><strong>Estilo:</strong> RPG de Turnos</p>
-            <p><strong>Plataformas:</strong> PC, PS4, Switch</p>
+            <p><strong>Desenvolvedor:</strong> Toby Fox</p>
+            <p><strong>Trilha Sonora:</strong> "Megalovania", "Hopes and Dreams"</p>
+            <p><strong>Inspiração:</strong> EarthBound, Shin Megami Tensei</p>
             <hr>
-            <p style="text-align: center; color: #ffff00;">"Isso te enche de DETERMINAÇÃO."</p>
+            <p><strong>As 7 Almas:</strong></p>
+            <ul style="font-size: 12px;">
+                <li><span style="color:red">❤</span> Determinação</li>
+                <li><span style="color:orange">●</span> Bravura</li>
+                <li><span style="color:yellow">●</span> Justiça</li>
+                <li><span style="color:green">●</span> Bondade</li>
+                <li><span style="color:cyan">●</span> Paciência</li>
+                <li><span style="color:blue">●</span> Integridade</li>
+                <li><span style="color:purple">●</span> Perseverança</li>
+            </ul>
         </aside>
 
-        <!-- Conteúdo Principal -->
         <main>
-            <section id="apresentacao">
-                <h2>Sobre o Jogo</h2>
-                <p>Undertale é um jogo independente que revolucionou o gênero RPG. Nele, você controla uma criança humana que cai no "Subsolo" — um reino vasto isolado por uma barreira mágica. O diferencial está na liberdade: você pode vencer desafios conversando ou lutando.</p>
+            <section id="sobre">
+                <h2>História e Contexto</h2>
+                <p>Em 201X, uma criança escala o Monte Ebott e cai no Subsolo. Lá, os monstros foram selados após uma guerra antiga com os humanos. A grande questão de Undertale não é como você sobe de nível, mas sim como você trata aqueles que encontra no caminho.</p>
+                
+                <div class="info-grid">
+                    <div class="info-card">
+                        <strong>Sistema de LV:</strong> Aqui, LV significa "Love" (Nível de Violência) e EXP significa "Execution Points". Quanto mais você mata, mais fácil fica se distanciar dos seus atos.
+                    </div>
+                    <div class="info-card">
+                        <strong>A Quebra da 4ª Parede:</strong> O jogo lembra das suas escolhas mesmo se você resetar o save. Personagens como Flowey e Sans sabem o que você fez.
+                    </div>
+                </div>
             </section>
 
-            <section id="interacao">
-                <h2>Mecânicas de Interação</h2>
-                <p>Diferente de outros jogos, aqui a sua interação define o final da história (Rotas Neutra, Pacifista ou Genocida):</p>
+            <section id="personagens">
+                <h2>Personagens Icônicos</h2>
                 <ul>
-                    <li><strong>ACT (Agir):</strong> Permite entender os sentimentos do monstro.</li>
-                    <li><strong>MERCY (Piedade):</strong> Você decide poupar o inimigo e encerrar o conflito sem violência.</li>
-                    <li><strong>FIGHT (Lutar):</strong> O método tradicional de RPG, mas que traz peso moral à jornada.</li>
+                    <li><strong>Sans:</strong> Um esqueleto preguiçoso que ama piadas ruins, mas esconde um poder imenso.</li>
+                    <li><strong>Toriel:</strong> A guardiã das Ruínas que te ensina a ser piedoso.</li>
+                    <li><strong>Papyrus:</strong> Um esqueleto cheio de energia que sonha em entrar para a Guarda Real.</li>
                 </ul>
             </section>
 
-            <!-- Área de Interação (Fórum) -->
+            <!-- FÓRUM CONECTADO AO SUPABASE -->
             <section class="forum-area">
-                <h2>Fórum de Discussão</h2>
+                <h2>Fórum de Discussão (Real-time)</h2>
                 <div class="input-grupo">
                     <input type="text" id="nome-usuario" placeholder="Seu nome de usuário...">
                 </div>
                 <div class="input-grupo">
-                    <textarea id="texto-comentario" rows="4" placeholder="Escreva aqui o que você acha da moralidade no jogo..."></textarea>
+                    <textarea id="texto-comentario" rows="3" placeholder="O que você acha da Rota Genocida?"></textarea>
                 </div>
-                <button onclick="postarNoForum()">PUBLICAR NO FÓRUM</button>
+                <button onclick="postarNoSupabase()">ENVIAR PARA O SUBSOLO</button>
 
                 <div id="lista-comentarios">
-                    <!-- Comentários aparecerão aqui embaixo -->
+                    <p style="color: #888;">Conectando ao banco de dados...</p>
                 </div>
             </section>
         </main>
     </div>
 
     <script>
-        // JavaScript - Lógica do Fórum
-        function postarNoForum() {
-            // 1. Captura os valores dos campos
-            const usuario = document.getElementById('nome-usuario').value;
-            const mensagem = document.getElementById('texto-comentario').value;
+        // 1. CONFIGURAÇÃO DO SUPABASE
+        // Substitua pelos seus dados reais do painel Project Settings > API
+        const SUPABASE_URL = 'SUA_URL_DO_SUPABASE'; 
+        const SUPABASE_KEY = 'SUA_ANON_KEY_DO_SUPABASE';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-            // 2. Validação simples
-            if (usuario.trim() === "" || mensagem.trim() === "") {
-                alert("Opa! Você precisa preencher o nome e a mensagem.");
+        // 2. BUSCAR COMENTÁRIOS AO CARREGAR
+        async function carregarMensagens() {
+            const { data, error } = await _supabase
+                .from('comentarios')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error("Erro:", error);
+                document.getElementById('lista-comentarios').innerHTML = "Erro ao carregar dados.";
                 return;
             }
-
-            // 3. Cria o elemento do novo comentário
-            const lista = document.getElementById('lista-comentarios');
-            const novoCard = document.createElement('div');
-            novoCard.className = 'comentario-card';
-
-            // 4. Monta o HTML interno do comentário
-            novoCard.innerHTML = `<strong>@${usuario}</strong>: <p>${mensagem}</p>`;
-
-            // 5. Adiciona no topo da lista
-            lista.prepend(novoCard);
-
-            // 6. Limpa os campos para o próximo uso
-            document.getElementById('nome-usuario').value = "";
-            document.getElementById('texto-comentario').value = "";
+            renderizar(data);
         }
-    </script>
 
+        // 3. DESENHAR COMENTÁRIOS NA TELA
+        function renderizar(mensagens) {
+            const container = document.getElementById('lista-comentarios');
+            container.innerHTML = '';
+
+            mensagens.forEach(m => {
+                const data = new Date(m.created_at).toLocaleString('pt-BR');
+                const div = document.createElement('div');
+                div.className = 'comentario-card';
+                div.innerHTML = `
+                    <div class="meta-info">${data}</div>
+                    <strong>@${m.usuario}</strong>
+                    <p>${m.mensagem}</p>
+                    <button class="btn-like" onclick="curtir(${m.id}, ${m.likes})">
+                        ❤ Determinação (${m.likes})
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // 4. POSTAR NOVO COMENTÁRIO
+        async function postarNoSupabase() {
+            const user = document.getElementById('nome-usuario').value;
+            const msg = document.getElementById('texto-comentario').value;
+
+            if(!user || !msg) return alert("Preencha os campos!");
+
+            const { error } = await _supabase
+                .from('comentarios')
+                .insert([{ usuario: user, mensagem: msg, likes: 0 }]);
+
+            if(error) {
+                alert("Erro ao postar!");
+            } else {
+                document.getElementById('texto-comentario').value = '';
+                carregarMensagens();
+            }
+        }
+
+        // 5. SISTEMA DE LIKES
+        async function curtir(id, likesAtuais) {
+            const { error } = await _supabase
+                .from('comentarios')
+                .update({ likes: likesAtuais + 1 })
+                .eq('id', id);
+
+            if(!error) carregarMensagens();
+        }
+
+        // Iniciar chamando os dados
+        carregarMensagens();
+    </script>
 </body>
 </html>
